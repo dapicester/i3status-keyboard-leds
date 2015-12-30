@@ -2,19 +2,22 @@
 
 require 'json'
 
-I3STATUS_CMD = 'i3status'
-
 class LedStatus
 
   def self.run!
     led_status = LedStatus.new
+    $stdout.sync = true
 
-    # Skip the first line which contains the version header and
-    # the second line containing the start of the infinite array
-    2.times { ARGF.readline }
-    # Do your job
-    ARGF.each { |line| puts led_status.prepend_to line }
+    IO.popen(I3STATUS_CMD, 'r') do |pipe|
+      # Skip the first line which contains the version header and
+      # the second line containing the start of the infinite array
+      2.times { $stdout.puts pipe.readline }
+      # Do your job
+      pipe.each { |line| $stdout.puts led_status.prepend_to line }
+    end
   end
+
+  I3STATUS_CMD = 'i3status'
 
   LED_STATUS_CMD = 'xset q | grep "LED mask"'
 
