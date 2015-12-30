@@ -11,7 +11,7 @@ class LedStatus
     ['altgr',  0b1111101000, '#B58900'],
     ['scroll', 0b0000000100, '#2AA198'],
     ['num',    0b0000000010, '#859900'],
-    ['caps',   0b0000000001, '#DC322F'],
+    ['caps',   0b0000000001, '#DC322F']
   ].freeze
 
   def current_mask
@@ -20,9 +20,7 @@ class LedStatus
   end
 
   def leds
-    LED_MASKS.select do |_, mask, _|
-      mask & current_mask == 1
-    end.map do |name, _, color|
+    LED_MASKS.select { |_, mask, _| mask & current_mask == 1 }.map do |name, _, color|
       { full_text: name.upcase, name: name, color: color }
     end
   end
@@ -65,4 +63,4 @@ class I3StatusPlus
   end
 end
 
-I3StatusPlus.run! if $0 == __FILE__
+I3StatusPlus.run! if $PROGRAM_NAME == __FILE__
